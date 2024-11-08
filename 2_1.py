@@ -1,4 +1,4 @@
-def checkpassword():
+def password():
     a = input("Введите пароль: ")
     b = input("Подтвердите пароль: ")
 
@@ -6,4 +6,4 @@ def checkpassword():
         print("Пароль принят")
     else:
         print("Пароль не принят")
-checkpassword()
+password()
