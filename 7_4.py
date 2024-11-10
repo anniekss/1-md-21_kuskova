@@ -1,30 +1,29 @@
-def watermarkadd():
-    from PIL import Image
-    import os
+from PIL import Image, ImageDraw, ImageFont
+import os
 
-    def add_watermark(image_path, watermark_path, output_folder):
+input_folder = "C:\\Users\\annku\\Downloads\\"
+image_files = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"]
+watermark = "Water Mark"
+
+for i in image_files:
+    try:
+        image_path = os.path.join(input_folder, i)
         image = Image.open(image_path)
-        watermark = Image.open(watermark_path)
-        image_width, image_height = image.size
-        watermark_width, watermark_height = watermark.size
-        scale_factor = min(image_width / 3 / watermark_width, image_height / 3 / watermark_height)
-        new_width = int(watermark_width * scale_factor)
-        new_height = int(watermark_height * scale_factor)
-        watermark_resized = watermark.resize((new_width, new_height))
-        position = ((image_width - new_width) // 2, (image_height - new_height) // 2)
-        image.paste(watermark_resized, position, watermark_resized)
-        output_path = os.path.join(output_folder, os.path.basename(image_path))
-        image.save(output_path)
 
-    input_folder = "input_images"
-    watermark_path = "watermark.png"
-    output_folder = "output_images"
+        drawing = ImageDraw.Draw(image)
 
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+        colour = (255, 255, 255)
+        font = ImageFont.truetype("arial.ttf", 36)  # Убедитесь, что шрифт доступен
 
-    for filename in os.listdir(input_folder):
-        if filename.endswith(".jpg"):
-            image_path = os.path.join(input_folder, filename)
-            add_watermark(image_path, watermark_path, output_folder)
-print(watermarkadd())
+        drawing.text((0, 0), watermark, fill=colour, font=font)
+
+        output_filename = os.path.join(input_folder, "watermarked_" + os.path.basename(i))
+        image.save(output_filename)
+        print(f"Водяной знак добавлен к {i} и сохранен как {output_filename}")
+
+    except FileNotFoundError:
+        print(f"Файл не найден: {i}")
+    except Exception as e:
+        print(f"Произошла ошибка при обработке {i}: {e}")
+
+print("Обработка завершена!")
